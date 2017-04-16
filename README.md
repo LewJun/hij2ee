@@ -221,3 +221,12 @@ console.log("hello world")
 <p><c:forEach items="${username }" var="u" varStatus="status">${u}</c:forEach></p>
 ``` 
 
+## 整理spring mvc依赖包
+导入spring-webmvc默认会导入以下依赖包：
+* spring-beans
+* spring-context
+* spring-aop
+* spring-core
+* spring-expression
+* spring-web
+所以这里将重复导入的地方删除，只保留spring-webmvc和spring-test

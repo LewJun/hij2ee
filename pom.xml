@@ -60,34 +60,6 @@
 
 		
 		<!-- spring frame start -->
-		<!-- 1 spring core start-->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-			<version>${spring.version}</version>
-			<exclusions>
-				<!-- Exclude Commons Logging in favor of SLF4j -->
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
-		<!-- 1 spring core end-->
-		<!-- 2 spring 测试 start -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>${spring.version}</version>
-        </dependency>
-        <!-- 2 spring 测试 end -->
-        
         <!-- 3 spring mvc start -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -95,6 +67,13 @@
 			<version>${spring.version}</version>
 		</dependency>
         <!-- 3 spring mvc end -->
+        <!-- 2 spring 测试 start -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <!-- 2 spring 测试 end -->
 		<!-- spring frame end -->
 		
 		<!-- JSTL标签类用于视图页面使用，就能使用c:forEach等这样的指令了 -->

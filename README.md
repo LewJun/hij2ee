@@ -80,5 +80,109 @@ public class SpringJunitTest {
 ### run
 运行成功
 
+## 集成springmvc
+### 添加springmvc相关依赖
+
+``` xml
+<!-- 3 spring mvc start -->
+<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring-webmvc</artifactId>
+	<version>${spring.version}</version>
+</dependency>
+<!-- 3 spring mvc end -->
+```
+
+### 配置spring-mvc.xml
+添加src/main/resources/spring/spring-web.xml
+
+``` xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+	<!-- 1.开启SpringMVC注解模式 -->
+	<mvc:annotation-driven />
+	<!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
+	<context:component-scan base-package="com.lewjun.controller" />
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+</beans>
+```
+并在spring.xml文件中导入spring-web.xml
+
+### 配置web.xml
+
+``` xml 
+<web-app>
+	<display-name>spring-mvc</display-name>
+
+	<servlet>
+		<servlet-name>spring-mvc</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:spring/spring.xml</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>spring-mvc</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+</web-app>
+``` 
+
+### 添加HelloController
+
+``` java 
+@Controller
+@RequestMapping("/hello")
+public class HelloController {
+
+	@RequestMapping(value = "/greet", method = RequestMethod.GET)
+	public String greet() {
+		return "/hello/greet";
+	}
+}
+``` 
+
+### 添加greet.jsp
+添加/WEB-INF/views/jsp/hello/greet.jsp
+
+``` html 
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<title>greet</title>
+</head>
+<body>
+hello world
+</body>
+</html>
+```
+
+### run
+* 将程序发布到tomcat
+* 启动tomcat
+* 访问
+> http://127.0.0.1:8080/hij2ee/hello/greet
+
+
+
+
+
+
 
 

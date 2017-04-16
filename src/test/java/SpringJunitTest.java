@@ -2,7 +2,7 @@
  * Sunnysoft.com Inc.
  * Copyright (c) 2004-2017 All Rights Reserved.
  */
-package com.lewjun;
+
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

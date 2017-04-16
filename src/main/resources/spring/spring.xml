@@ -9,4 +9,6 @@
 	
 	<!-- 自动扫描(自动注入)，扫描com.lewjun这个包以及它的子包的所有使用@Service, @Repository注解标注的类 -->
     <context:component-scan base-package="com.lewjun" />
+    
+	<import resource="./spring-web.xml"/>
 </beans>

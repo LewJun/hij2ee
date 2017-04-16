@@ -4,7 +4,7 @@
 	<groupId>com.lewjun</groupId>
 	<artifactId>hij2ee</artifactId>
 	<packaging>war</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>hij2ee Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 	<properties>
@@ -86,6 +86,15 @@
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
         </dependency>
+        <!-- 2 spring 测试 end -->
+        
+        <!-- 3 spring mvc start -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+        <!-- 3 spring mvc end -->
 		<!-- spring frame end -->
 	</dependencies>
 	<build>

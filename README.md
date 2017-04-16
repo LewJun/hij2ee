@@ -230,3 +230,19 @@ console.log("hello world")
 * spring-expression
 * spring-web
 所以这里将重复导入的地方删除，只保留spring-webmvc和spring-test
+
+
+## 在Controller中使用redirect方式处理请求
+
+``` java 
+/**
+ * 通过返回"redirect:/hello/greet"完成跳转
+ * @return
+ */
+@RequestMapping(value = "/redirect", method = RequestMethod.GET)
+public String redirect() {
+	LOGGER.info("【redirect】");
+	return "redirect:/hello/greet";
+}
+```
+

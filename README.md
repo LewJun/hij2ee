@@ -180,9 +180,44 @@ hello world
 > http://127.0.0.1:8080/hij2ee/hello/greet
 
 
+### 映射静态资源 mvc:resources
 
+不希望js,css,png等静态资源也被spring的过滤器处理
+* 修改spring-web.xml, 添加如下配置
+``` xml 
+	<mvc:resources location="/assets/" mapping="/assets/**"/>
+``` 
 
+* 添加assets目录
+/webapp/assets
 
+* 添加hello/greet.js
+/webapp/assets/hello/greet.js
 
+``` js
+console.log("hello world")
+``` 
 
+* 使用hello/greet.js
+<script type="text/javascript" src="../assets/hello/greet.js"></script>
+
+### 使用jstl
+
+* 导入jstl依赖
+
+``` xml
+<!-- JSTL标签类用于视图页面使用，就能使用c:forEach等这样的指令了 -->
+<dependency>
+	<groupId>jstl</groupId>
+	<artifactId>jstl</artifactId>
+	<version>1.2</version>
+</dependency>
+``` 
+
+* 使用指令
+
+``` jsp
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<p><c:forEach items="${username }" var="u" varStatus="status">${u}</c:forEach></p>
+``` 
 

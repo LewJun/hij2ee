@@ -96,6 +96,13 @@
 		</dependency>
         <!-- 3 spring mvc end -->
 		<!-- spring frame end -->
+		
+		<!-- JSTL标签类用于视图页面使用，就能使用c:forEach等这样的指令了 -->
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>hij2ee</finalName>

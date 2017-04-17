@@ -448,3 +448,26 @@ b) 在defaultViews的list下添加如下代码
 </bean>
 ```
 
+### 避免IE执行AJAX时,返回JSON出现下载文件
+当我在浏览器上访问 http://127.0.0.1:8080/hij2ee/emp/index?format=json 会出现下载json文件的问题
+这个问题会一直存在，而我们要解决的是`避免IE执行AJAX时,返回JSON出现下载文件`
+
+```
+<mvc:annotation-driven>
+    <mvc:message-converters register-defaults="false">
+        <!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
+        <bean id="fastJsonHttpMessageConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+            <property name="supportedMediaTypes">
+                <list>
+                    <!-- 这里顺序不能反，一定先写text/html,不然ie下出现下载提示 -->
+                    <value>text/html;charset=UTF-8</value>
+                    <value>application/json;charset=UTF-8</value>
+                </list>
+            </property>
+        </bean>
+    </mvc:message-converters>
+</mvc:annotation-driven>
+```
+
+
+

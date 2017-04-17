@@ -10,6 +10,7 @@
     <properties>
         <spring.version>3.2.2.RELEASE</spring.version>
         <jackson.version>2.2.1</jackson.version>
+        <jackson.core.version>2.6.3</jackson.core.version>
     </properties>
     <dependencies>
         <!-- junit -->
@@ -96,8 +97,6 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.7</version>
         </dependency>
-        
-        
     </dependencies>
     <build>
         <finalName>hij2ee</finalName>

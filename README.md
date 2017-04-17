@@ -17,22 +17,22 @@ mvn archetype:generate -DgroupId=com.lewjun -DartifactId=hij2ee -DarchetypeArtif
 <!-- spring frame start -->
 <!-- 1 spring core start-->
 <dependency>
-	<groupId>org.springframework</groupId>
-	<artifactId>spring-core</artifactId>
-	<version>${spring.version}</version>
-	<exclusions>
-		<!-- Exclude Commons Logging in favor of SLF4j -->
-		<exclusion>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-		</exclusion>
-	</exclusions>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-core</artifactId>
+    <version>${spring.version}</version>
+    <exclusions>
+        <!-- Exclude Commons Logging in favor of SLF4j -->
+        <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+        </exclusion>
+    </exclusions>
 </dependency>
 
 <dependency>
-	<groupId>org.springframework</groupId>
-	<artifactId>spring-context</artifactId>
-	<version>${spring.version}</version>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-context</artifactId>
+    <version>${spring.version}</version>
 </dependency>
 <!-- 1 spring core end-->
 <!-- spring frame end -->
@@ -40,9 +40,9 @@ mvn archetype:generate -DgroupId=com.lewjun -DartifactId=hij2ee -DarchetypeArtif
 上面排除了commons-logging，但还是要加入进去
 ``` xml
 <dependency>
-	<groupId>commons-logging</groupId>
-	<artifactId>commons-logging</artifactId>
-	<version>1.1.1</version>
+    <groupId>commons-logging</groupId>
+    <artifactId>commons-logging</artifactId>
+    <version>1.1.1</version>
 </dependency>
 ```
 
@@ -52,14 +52,14 @@ mvn archetype:generate -DgroupId=com.lewjun -DartifactId=hij2ee -DarchetypeArtif
 ``` xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-	http://www.springframework.org/schema/context
-	http://www.springframework.org/schema/context/spring-context-3.2.xsd">
-	
-	<!-- 自动扫描(自动注入)，扫描com.lewjun这个包以及它的子包的所有使用@Service, @Repository注解标注的类 -->
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+    
+    <!-- 自动扫描(自动注入)，扫描com.lewjun这个包以及它的子包的所有使用@Service, @Repository注解标注的类 -->
     <context:component-scan base-package="com.lewjun" />
 </beans>
 ```
@@ -71,10 +71,10 @@ mvn archetype:generate -DgroupId=com.lewjun -DartifactId=hij2ee -DarchetypeArtif
 // 配置了@ContextConfiguration注解并使用该注解的locations属性指明spring和配置文件之后，
 @ContextConfiguration(locations = { "classpath:spring/spring.xml" })
 public class SpringJunitTest {
-	@Test
-	public void testSpring() {
-		System.out.println("只为测试spring是否配置成功");
-	}
+    @Test
+    public void testSpring() {
+        System.out.println("只为测试spring是否配置成功");
+    }
 }
 ```
 ### run
@@ -86,9 +86,9 @@ public class SpringJunitTest {
 ``` xml
 <!-- 3 spring mvc start -->
 <dependency>
-	<groupId>org.springframework</groupId>
-	<artifactId>spring-webmvc</artifactId>
-	<version>${spring.version}</version>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-webmvc</artifactId>
+    <version>${spring.version}</version>
 </dependency>
 <!-- 3 spring mvc end -->
 ```
@@ -98,24 +98,24 @@ public class SpringJunitTest {
 
 ``` xml
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xsi:schemaLocation="
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.2.xsd">
-	<!-- 1.开启SpringMVC注解模式 -->
-	<mvc:annotation-driven />
-	<!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
-	<context:component-scan base-package="com.lewjun.controller" />
-	<bean
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/WEB-INF/views/jsp/" />
-		<property name="suffix" value=".jsp" />
-	</bean>
+    <!-- 1.开启SpringMVC注解模式 -->
+    <mvc:annotation-driven />
+    <!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
+    <context:component-scan base-package="com.lewjun.controller" />
+    <bean
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/jsp/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
 </beans>
 ```
 并在spring.xml文件中导入spring-web.xml
@@ -124,22 +124,22 @@ public class SpringJunitTest {
 
 ``` xml 
 <web-app>
-	<display-name>spring-mvc</display-name>
+    <display-name>spring-mvc</display-name>
 
-	<servlet>
-		<servlet-name>spring-mvc</servlet-name>
-		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-		<init-param>
-			<param-name>contextConfigLocation</param-name>
-			<param-value>classpath:spring/spring.xml</param-value>
-		</init-param>
-	</servlet>
+    <servlet>
+        <servlet-name>spring-mvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:spring/spring.xml</param-value>
+        </init-param>
+    </servlet>
 
-	<servlet-mapping>
-		<servlet-name>spring-mvc</servlet-name>
-		<url-pattern>/</url-pattern>
-	</servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>spring-mvc</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
 </web-app>
 ``` 
 
@@ -150,10 +150,10 @@ public class SpringJunitTest {
 @RequestMapping("/hello")
 public class HelloController {
 
-	@RequestMapping(value = "/greet", method = RequestMethod.GET)
-	public String greet() {
-		return "/hello/greet";
-	}
+    @RequestMapping(value = "/greet", method = RequestMethod.GET)
+    public String greet() {
+        return "/hello/greet";
+    }
 }
 ``` 
 
@@ -185,7 +185,7 @@ hello world
 不希望js,css,png等静态资源也被spring的过滤器处理
 * 修改spring-web.xml, 添加如下配置
 ``` xml 
-	<mvc:resources location="/assets/" mapping="/assets/**"/>
+    <mvc:resources location="/assets/" mapping="/assets/**"/>
 ``` 
 
 * 添加assets目录
@@ -208,9 +208,9 @@ console.log("hello world")
 ``` xml
 <!-- JSTL标签类用于视图页面使用，就能使用c:forEach等这样的指令了 -->
 <dependency>
-	<groupId>jstl</groupId>
-	<artifactId>jstl</artifactId>
-	<version>1.2</version>
+    <groupId>jstl</groupId>
+    <artifactId>jstl</artifactId>
+    <version>1.2</version>
 </dependency>
 ``` 
 
@@ -241,8 +241,210 @@ console.log("hello world")
  */
 @RequestMapping(value = "/redirect", method = RequestMethod.GET)
 public String redirect() {
-	LOGGER.info("【redirect】");
-	return "redirect:/hello/greet";
+    LOGGER.info("【redirect】");
+    return "redirect:/hello/greet";
 }
+```
+
+## 同一资源,多种表述
+使用ContentNegotiatingViewResolver可以做到这点
+
+* 方式1  使用扩展名
+
+``` 
+http://127.0.0.1:8080/hij2ee/emp/index.json 显示json数据
+http://127.0.0.1:8080/hij2ee/emp/index.xml 显示xml数据
+http://127.0.0.1:8080/hij2ee/emp/index 使用默认view呈现 例如jsp等
+```
+
+* 方式2 使用http request header 的Accept
+
+``` 
+GET /emp HTTP/1.1
+Accept:application/xml
+
+GET /emp HTTP/1.1
+Accept:application/json
+```
+
+* 方式3 使用参数 format
+
+``` 
+http://127.0.0.1:8080/hij2ee/emp/index?format=json
+http://127.0.0.1:8080/hij2ee/emp/index?format=xml
+http://127.0.0.1:8080/hij2ee/emp/index
+```
+
+### EMP.java
+
+``` java
+public class Emp {
+    private Integer empno;
+
+    private String  ename;
+
+    private String  job;
+
+    private Integer mgr;
+
+    private Date    hiredate;
+
+    private Integer deptno;
+
+    // getter and setter ...
+}
+```
+
+### 
+
+``` java
+@Controller
+@RequestMapping("/emp")
+public class EmpController extends ApplicationBaseController {
+    @RequestMapping("/index")
+    public ModelAndView index() {
+        ModelAndView mav = new ModelAndView("emp/index");
+        Emp emp = new Emp();
+        emp.setDeptno(23);
+        emp.setEmpno(72);
+        mav.addObject(emp);
+        return mav;
+    }
+}
+```
+
+### 配置spring-web.xml
+
+#### 首先我们来支持json格式
+
+``` xml
+<!-- 
+            配置返回视图的位置 
+            同一资源，多种表述   
+ -->
+<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+    <property name="order" value="1" />
+    <!-- 是否启用参数支持 ?format=json -->
+    <property name="favorParameter" value="true" />
+    <property name="ignoreAcceptHeader" value="true" />
+    <property name="mediaTypes">
+        <map>
+            <entry key="json" value="application/json" />
+        </map>
+    </property>
+
+    <property name="defaultViews">
+        <list>
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonJsonView">
+                <property name="charset" value="UTF-8"/>
+            </bean>
+        </list>
+    </property>
+
+</bean>
+
+<!-- If no extension matched, use JSP view -->
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="order" value="2" />
+    <property name="prefix" value="/WEB-INF/views/jsp/" />
+    <property name="suffix" value=".jsp" />
+</bean>
+
+```
+
+上面我们使用了FastJsonJsonView，因此，我们要导入alibaba json
+```
+<dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>fastjson</artifactId>
+    <version>1.2.7</version>
+</dependency>
+```
+
+* run
+- http://127.0.0.1:8080/hij2ee/emp/index?format=json
+- http://127.0.0.1:8080/hij2ee/emp/index.json
+
+output 
+> {"emp":{"deptno":23,"empno":72}}
+
+http://127.0.0.1:8080/hij2ee/emp/index
+这样就直接返回页面 /emp/index.jsp
+
+
+#### 首先我们来支持xml格式
+
+* 修改之前的Emp.java
+
+``` java
+@XmlRootElement(name = "emp")
+public class Emp {
+    private Integer empno;
+
+    @XmlElement
+    public void setEmpno(Integer empno) {
+        this.empno = empno;
+    }
+
+    // 在所有的setter上添加@XmlElement注解
+}
+```
+
+* 修改spring-web.xml
+a) 在mediaTypes中加入
+
+``` 
+<entry key="xml" value="application/xml" />
+```
+
+b) 在defaultViews的list下添加如下代码
+
+```
+<!-- JAXB XML View -->
+<bean class="org.springframework.web.servlet.view.xml.MarshallingView">
+    <constructor-arg>
+        <!-- <bean class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+            <property name="classesToBeBound">
+                <list>
+                    <value>com.lewjun.bean.Emp</value>
+                </list>
+            </property>
+        </bean> -->
+        <bean class="com.lewjun.utils.PackagesToScanJaxb2Marshaller">
+            <property name="basePackages">
+               <list>
+                   <value>com.lewjun.bean</value>
+               </list>
+            </property>
+        </bean>
+    </constructor-arg>
+</bean>
+```
+
+上面我们使用了org.springframework.web.servlet.view.xml.MarshallingView，因此，我们要导入spring-oxm
+
+
+配置org.springframework.oxm.jaxb.Jaxb2Marshaller只能一个一个的添加类，
+
+``` xml
+<bean class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+    <property name="classesToBeBound">
+        <list>
+            <value>com.lewjun.bean.Emp</value>
+        </list>
+    </property>
+</bean>
+```
+
+因此我们自定义一个PackagesToScanJaxb2Marshaller，可以直接添加一个包名就可以了。
+
+``` xml
+<bean class="com.lewjun.utils.PackagesToScanJaxb2Marshaller">
+    <property name="basePackages">
+       <list>
+           <value>com.lewjun.bean</value>
+       </list>
+    </property>
+</bean>
 ```
 

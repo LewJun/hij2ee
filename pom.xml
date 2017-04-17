@@ -1,71 +1,72 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.lewjun</groupId>
-	<artifactId>hij2ee</artifactId>
-	<packaging>war</packaging>
-	<version>1.0</version>
-	<name>hij2ee Maven Webapp</name>
-	<url>http://maven.apache.org</url>
-	<properties>
-		<spring.version>3.2.2.RELEASE</spring.version>
-	</properties>
-	<dependencies>
-		<!-- junit -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.lewjun</groupId>
+    <artifactId>hij2ee</artifactId>
+    <packaging>war</packaging>
+    <version>1.0</version>
+    <name>hij2ee Maven Webapp</name>
+    <url>http://maven.apache.org</url>
+    <properties>
+        <spring.version>3.2.2.RELEASE</spring.version>
+        <jackson.version>2.2.1</jackson.version>
+    </properties>
+    <dependencies>
+        <!-- junit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
 
-		<!-- slf4j start -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.12</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.12</version>
-			<exclusions>
-				<exclusion>
-					<groupId>log4j</groupId>
-					<artifactId>log4j</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<!-- slf4j end -->
+        <!-- slf4j start -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.12</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.12</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- slf4j end -->
 
-		<!-- log start -->
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.1.1</version>
-		</dependency>
-		<!-- log end -->
+        <!-- log start -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <!-- log end -->
 
-		<!-- javax.mail用于把错误日志信息输出到邮件 -->
-		<dependency>
-			<groupId>javax.mail</groupId>
-			<artifactId>mail</artifactId>
-			<version>1.4.7</version>
-		</dependency>
+        <!-- javax.mail用于把错误日志信息输出到邮件 -->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
+        </dependency>
 
-		
-		<!-- spring frame start -->
+        
+        <!-- spring frame start -->
         <!-- 3 spring mvc start -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-			<version>${spring.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
         <!-- 3 spring mvc end -->
         <!-- 2 spring 测试 start -->
         <dependency>
@@ -74,16 +75,31 @@
             <version>${spring.version}</version>
         </dependency>
         <!-- 2 spring 测试 end -->
-		<!-- spring frame end -->
-		
-		<!-- JSTL标签类用于视图页面使用，就能使用c:forEach等这样的指令了 -->
-		<dependency>
-			<groupId>jstl</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
-		</dependency>
-	</dependencies>
-	<build>
-		<finalName>hij2ee</finalName>
-	</build>
+        
+        <!-- Needed for XML View (with JAXB2) -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-oxm</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <!-- spring frame end -->
+
+        <!-- JSTL标签类用于视图页面使用，就能使用c:forEach等这样的指令了 -->
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.7</version>
+        </dependency>
+        
+        
+    </dependencies>
+    <build>
+        <finalName>hij2ee</finalName>
+    </build>
 </project>

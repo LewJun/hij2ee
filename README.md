@@ -494,6 +494,58 @@ b) 在defaultViews的list下添加如下代码
 </form>
 ```
 
+### 使用HttpURLConnection上传文件
+
+``` java
+    public String upload2(String requestUrl, File file) {
+        InputStream input = null;
+        OutputStream output = null;
+        String returnValue = null;
+        // 定义数据分割符
+        String boundary = "------Boundary" + System.currentTimeMillis();
+        try {
+            URL uploadUrl = new URL(requestUrl);
+            HttpURLConnection uploadConn = (HttpURLConnection) uploadUrl.openConnection();
+            uploadConn.setDoOutput(true);
+            uploadConn.setDoInput(true);
+            uploadConn.setRequestMethod("POST");
+            // 设置请求头Content-Type
+            uploadConn.setRequestProperty("Content-Type",
+                "multipart/form-data;boundary=" + boundary);
+            // 获取媒体文件上传的输出流
+            output = uploadConn.getOutputStream();
+
+            StringBuilder outputSb = new StringBuilder("");
+            // 请求体开始
+            outputSb.append("--" + boundary + "\r\n")
+                // 设置文件名
+                .append(String.format(
+                    "Content-Disposition: form-data; name=\"media\"; filename=\"%s\"\r\n",
+                    file.getName()))
+                // 从请求头中获取内容类型
+                .append("Content-Type: application/octet-stream\r\n\r\n");
+
+            output.write(outputSb.toString().getBytes());
+            // 获取媒体文件的输入流（读取文件）
+            input = new FileInputStream(file);
+            IOUtils.copy(input, output);
+            // 请求体结束
+            output.write(("\r\n--" + boundary + "--\r\n").getBytes());
+            // 获取媒体文件上传的输入流（从微信服务器读数据）
+            input = uploadConn.getInputStream();
+            returnValue = new String(IOUtils.toByteArray(input));
+
+        } catch (Exception e) {
+            //LOGGER.error("【error:{}】",e);
+            throw new RuntimeException(e);
+        } finally {
+            IOUtils.closeQuietly(input);
+            IOUtils.closeQuietly(output);
+        }
+        return returnValue;
+    }
+```
+
 ### 配置multipartResolver
 
 ``` xml

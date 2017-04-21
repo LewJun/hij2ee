@@ -452,7 +452,7 @@ b) 在defaultViews的list下添加如下代码
 当我在浏览器上访问 http://127.0.0.1:8080/hij2ee/emp/index?format=json 会出现下载json文件的问题
 这个问题会一直存在，而我们要解决的是`避免IE执行AJAX时,返回JSON出现下载文件`
 
-```
+``` xml
 <mvc:annotation-driven>
     <mvc:message-converters register-defaults="false">
         <!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
@@ -469,5 +469,146 @@ b) 在defaultViews的list下添加如下代码
 </mvc:annotation-driven>
 ```
 
+## 文件上传
+### 依赖上传组件包
 
+``` xml
+<!-- 上传组件包 -->  
+<dependency>  
+    <groupId>commons-fileupload</groupId>  
+    <artifactId>commons-fileupload</artifactId>  
+    <version>1.3.1</version>  
+</dependency>
+```
+
+### web页面上传
+
+* form 表单需要指定enctype="multipart/form-data"
+* 需要为文件组件指定名字 ** name=file **  
+
+``` xml
+<form action="http://127.0.0.1:8080/hij2ee/media/upload" method="post" enctype="multipart/form-data">
+<h1>使用spring mvc提供的类的方法上传文件</h1>
+<input type="file" name="file">
+<input type="submit" value="upload"/>
+</form>
+```
+
+### 配置multipartResolver
+
+``` xml
+<!-- 多部分文件上传 -->
+<bean id="multipartResolver"
+    class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <!--1024*200即200k-->  
+    <property name="maxUploadSize" value="204800"/>  
+    <!--resolveLazily属性启用是为了推迟文件解析，以便在UploadAction 中捕获文件大小异常-->  
+    <property name="resolveLazily" value="true"/>
+    <property name="maxInMemorySize" value="4096" />
+    <property name="defaultEncoding" value="UTF-8" />
+</bean>
+```
+
+### 上传
+#### 依赖 HttpServletRequest上传文件
+
+* 这种方式上传文件的好处是只要你上传的文件有名字就可以了，而不要求具体是什么名字
+
+``` xml
+<!-- compile only, deployed container will provide this -->
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+    <version>${servletapi.version}</version>
+    <scope>provided</scope>
+</dependency>
+```
+
+``` java 
+@Controller
+@RequestMapping("/media")
+public class MediaController extends ApplicationBaseController {
+
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @ResponseBody
+    public String upload(MultipartHttpServletRequest request) throws Exception {
+        Map<String, MultipartFile> fileMap = request.getFileMap();
+        List<MediaModel> mediaModels = new ArrayList<MediaModel>();
+        if (fileMap != null && fileMap.size() != 0) {
+            for (Map.Entry<String, MultipartFile> me : fileMap.entrySet()) {
+                MultipartFile mf = me.getValue();
+                String filename = mf.getOriginalFilename();
+                long filesize = mf.getSize();
+
+                // 保存到磁盘
+                mf.transferTo(new File("E:/springmvcUpload/" + filename));
+
+                MediaModel mm = new MediaModel();
+                mm.setCode(UUID.randomUUID().toString());
+                mm.setId(72);
+                mm.setFilename(filename);
+                mm.setFilepath("/file/path");
+                mm.setFilesize(filesize);
+
+                mediaModels.add(mm);
+            }
+        }
+
+        final String result = JSON.toJSONString(mediaModels);
+        LOGGER.info("【result={}】", result);
+        return result;
+    }
+}
+
+class MediaModel {
+    private Serializable id;
+
+    private String       code;
+
+    private String       filename;
+
+    private String       filepath;
+
+    private long         filesize;
+    
+    private String       contentType;
+    
+    // getter and setter
+}
+```
+
+#### 采用流的方式上传文件
+#### 采用multipart提供的file.transfer方法上传文件
+
+``` java
+/**
+ * <p>采用file.Transto 来保存上传的文件
+ * <p>通过获取的字节数组和字节流来保存上传的文件
+ */
+@RequestMapping(value = "/upload2", method = RequestMethod.POST)
+@ResponseBody
+public String fileUpload2(@RequestParam("file") CommonsMultipartFile file) throws Exception {
+
+    MediaModel mm = new MediaModel();
+    if (file != null && !file.isEmpty()) {
+        String filename = file.getOriginalFilename();
+        String contentType = file.getContentType();
+        byte[] fileBytes = file.getBytes();
+        InputStream is = file.getInputStream();
+        long filesize = file.getSize();
+
+        file.transferTo(new File("E:/springmvcUpload/" + filename));
+
+        mm.setCode(UUID.randomUUID().toString());
+        mm.setId(72);
+        mm.setFilename(filename);
+        mm.setFilepath("/file/path");
+        mm.setFilesize(filesize);
+        mm.setContentType(contentType);
+    }
+    final String result = JSON.toJSONString(mm);
+    LOGGER.info("【result={}】", result);
+    return result;
+}
+```
 

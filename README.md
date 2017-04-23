@@ -664,3 +664,54 @@ public String fileUpload2(@RequestParam("file") CommonsMultipartFile file) throw
 }
 ```
 
+
+## 文件下载
+
+### 基于HttpServletResponse
+
+将字节数组写出去
+
+``` java
+
+/**
+ * 推荐使用这种方式
+ * 
+ * @param response
+ * @throws Exception
+ */
+@RequestMapping("download1")
+public static void download1(HttpServletResponse response) throws Exception {
+	String fileName = "惠.jpg";
+	// 设置响应头和客户端保存文件名
+	response.setCharacterEncoding("utf-8");
+	response.setContentType("multipart/form-data");
+	response.setHeader("Content-Disposition", "attachment;fileName="
+			+ new String(fileName.getBytes("utf-8"), "ISO8859-1"));// 解决中文乱码
+
+	// 打开本地文件流
+	InputStream is = new FileInputStream("E:/Camera/IMG_20170122_054915.jpg");
+	// 激活下载操作
+	OutputStream os = response.getOutputStream();
+//
+//		// 循环写入输出流
+//		byte[] bytes = new byte[1024];
+//		int length = 0;
+//		while ((length = is.read(bytes)) > 0) {
+//			os.write(bytes, 0, length);
+//		}
+//
+//		// 这里主要关闭。
+//		os.close();
+//		is.close();
+	
+	IOUtils.copy(is, os);
+	
+	IOUtils.closeQuietly(is);
+	IOUtils.closeQuietly(os);
+}
+```
+
+* 然而下载java通用实现在功能上比第一种实现更加丰富，对下载的文件大小无限制（循环读取一定量的字节写入到输出流中，因此不会造成内存溢出，但是在下载人数过多的时候应该还是出现一些异常，不过下载量较大的文件一般都会使用ftp服务器来做吧），另外因为是这种实现方式是基于循环写入的方式进行下载，在每次将字节块写入到输出流中的时都会进行输出流的合法性检测，在因为用户取消或者网络原因造成socket断开的时候，系统会抛出SocketWriteException，系统可以捕捉这个过程中抛出的异常，当捕捉到异常的时候我们可以记录当前已经传输的数据量，这样就可以完成下载状态和对应状态下载量和速度之类的数据记录。另外这种方式实现方式还可以实现一种断点续载的功能。
+
+
+

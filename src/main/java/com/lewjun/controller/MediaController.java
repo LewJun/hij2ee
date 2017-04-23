@@ -5,13 +5,24 @@
 package com.lewjun.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -96,6 +107,55 @@ public class MediaController extends ApplicationBaseController {
         LOGGER.info("【result={}】", result);
         return result;
     }
+
+	/**
+	 * 推荐使用这种方式
+	 * 
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping("download1")
+	public static void download1(HttpServletResponse response) throws Exception {
+		String fileName = "惠.jpg";
+		// 设置响应头和客户端保存文件名
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("multipart/form-data");
+		response.setHeader("Content-Disposition", "attachment;fileName="
+				+ new String(fileName.getBytes("utf-8"), "ISO8859-1"));// 解决中文乱码
+
+		// 打开本地文件流
+		InputStream is = new FileInputStream("E:/Camera/IMG_20170122_054915.jpg");
+		// 激活下载操作
+		OutputStream os = response.getOutputStream();
+//
+//		// 循环写入输出流
+//		byte[] bytes = new byte[1024];
+//		int length = 0;
+//		while ((length = is.read(bytes)) > 0) {
+//			os.write(bytes, 0, length);
+//		}
+//
+//		// 这里主要关闭。
+//		os.close();
+//		is.close();
+		
+		IOUtils.copy(is, os);
+		
+		IOUtils.closeQuietly(is);
+		IOUtils.closeQuietly(os);
+	}
+
+	@RequestMapping("/download2")
+	public ResponseEntity<byte[]> download2() throws IOException {
+		String fileName = "惠.jpg";
+		File file = new File("E:/Camera/IMG_20170122_054915.jpg");
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentDispositionFormData("attachment", new String(fileName.getBytes("utf-8"), "ISO8859-1"));
+		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		ResponseEntity<byte[]> entity = new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file), headers, HttpStatus.CREATED);
+		return entity;
+	}
 }
 
 class MediaModel {

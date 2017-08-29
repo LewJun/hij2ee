@@ -8,6 +8,9 @@
         http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+    <!-- 自动扫描(自动注入)，扫描com.lewjun.controller这个包以及它的子包的所有使用@Controller注解标注的类 -->
+    <context:component-scan base-package="com.lewjun.controller" />
+
     <!-- 1.开启SpringMVC注解模式 -->
     <!-- 简化配置： 
         (1)自动注册DefaultAnootationHandlerMapping,AnotationMethodHandlerAdapter 

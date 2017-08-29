@@ -713,5 +713,34 @@ public static void download1(HttpServletResponse response) throws Exception {
 
 * 然而下载java通用实现在功能上比第一种实现更加丰富，对下载的文件大小无限制（循环读取一定量的字节写入到输出流中，因此不会造成内存溢出，但是在下载人数过多的时候应该还是出现一些异常，不过下载量较大的文件一般都会使用ftp服务器来做吧），另外因为是这种实现方式是基于循环写入的方式进行下载，在每次将字节块写入到输出流中的时都会进行输出流的合法性检测，在因为用户取消或者网络原因造成socket断开的时候，系统会抛出SocketWriteException，系统可以捕捉这个过程中抛出的异常，当捕捉到异常的时候我们可以记录当前已经传输的数据量，这样就可以完成下载状态和对应状态下载量和速度之类的数据记录。另外这种方式实现方式还可以实现一种断点续载的功能。
 
+## 定時任務
+### 添加定時任務處理類
+```java
 
+@Component
+public class IloveuSchedule {
+    private static final Logger LOGGER = LoggerFactory.getLogger(IloveuSchedule.class);
+    // 从 0分钟开始,每2分钟执行一次
+    @Scheduled(cron = "0 0/2 * * * ?")
+    void sayIloveu() {
+        LOGGER.info("I Love U");
+    }
+}
 
+```
+
+### 使定時任務類生效
+添加spring-task.xml
+```xml 
+<!--
+定義綫程池
+	<task:executor id="executor" pool-size="5" />
+	<task:scheduler id="scheduler" pool-size="10" />
+	<task:annotation-driven executor="executor" scheduler="scheduler" />
+-->
+
+	<!-- 自动扫描com.lewjun.task下的定時任務 -->
+	<context:component-scan base-package="com.lewjun.task" />
+	<!-- 使任務注解生效 -->
+	<task:annotation-driven />
+```

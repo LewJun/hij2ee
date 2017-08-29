@@ -11,4 +11,5 @@
     <context:component-scan base-package="com.lewjun" />
     
 	<import resource="./spring-web.xml"/>
+	<import resource="spring-task.xml"/>
 </beans>

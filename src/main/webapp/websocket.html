@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>websocket demo</title>
+</head>
+<body>
+<div id="div"></div>
+</body>
+<script type="text/javascript">
+    var div = document.getElementById('div');
+    var socket = new WebSocket('ws://127.0.0.1:9090/websocket');
+
+    socket.onopen = function(event){
+        console.log(event);
+        socket.send('websocket client connect test');
+    };
+
+    socket.onclose = function(event){
+        console.log(event);
+    };
+
+    socket.onerror = function(event){
+        console.log(event);
+    };
+
+    socket.onmessage = function(event){
+        console.log(event);
+        div.innerHTML += (' @_@ ' + event.data + ' ~_~ ');
+    }
+</script>
+
+</html>

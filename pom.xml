@@ -8,7 +8,7 @@
     <name>hij2ee Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <properties>
-        <spring.version>3.2.2.RELEASE</spring.version>
+        <spring.version>4.3.20.RELEASE</spring.version>
         <jackson.version>2.2.1</jackson.version>
         <jackson.core.version>2.6.3</jackson.core.version>
         <servletapi.version>3.1.0</servletapi.version>
@@ -77,7 +77,26 @@
             <version>${spring.version}</version>
         </dependency>
         <!-- 2 spring 测试 end -->
-        
+
+        <!--WebSocket-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-websocket</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-messaging</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <version>1.1</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Needed for XML View (with JAXB2) -->
         <dependency>
             <groupId>org.springframework</groupId>

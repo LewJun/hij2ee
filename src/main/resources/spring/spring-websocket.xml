@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:websocket="http://www.springframework.org/schema/websocket"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.3.xsd
+	http://www.springframework.org/schema/websocket
+	http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd">
+
+    <!-- 自动扫描com.lewjun 使用注解的类 -->
+    <context:component-scan base-package="com.lewjun.handler, com.lewjun.interceptor"/>
+
+    <websocket:handlers>
+        <websocket:mapping handler="myWebSocketHandler" path="/websocket"/>
+        <websocket:handshake-interceptors>
+            <ref bean="myHttpSessionHandshakeInterceptor"/>
+        </websocket:handshake-interceptors>
+    </websocket:handlers>
+
+    <!-- 注册 sockJS,sockJs是spring对不能使用websocket协议的客户端提供一种模拟 -->
+    <websocket:handlers>
+        <websocket:mapping path="/sockjs/websocket" handler="myWebSocketHandler" />
+        <websocket:handshake-interceptors>
+            <ref bean="myHttpSessionHandshakeInterceptor" />
+        </websocket:handshake-interceptors>
+        <websocket:sockjs />
+    </websocket:handlers>
+</beans>

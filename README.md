@@ -744,3 +744,309 @@ public class IloveuSchedule {
 	<!-- 使任務注解生效 -->
 	<task:annotation-driven />
 ```
+
+## 整合WebSocket
+
+### 依赖spring-websocket
+#### 添加依赖
+```xml
+<!--WebSocket-->
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-websocket</artifactId>
+    <version>${spring.version}</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-messaging</artifactId>
+    <version>${spring.version}</version>
+</dependency>
+
+<!--当使用sockjs的时候会需要jackson-->
+<!-- jackson json -->
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-core</artifactId>
+    <version>${jackson.version}</version>
+</dependency>
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>${jackson.version}</version>
+</dependency>
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-annotations</artifactId>
+    <version>${jackson.version}</version>
+</dependency>
+<dependency>
+    <groupId>com.fasterxml.jackson.module</groupId>
+    <artifactId>jackson-module-jaxb-annotations</artifactId>
+    <version>${jackson.version}</version>
+</dependency>
+```
+
+#### 创建WebSocket处理类
+
+```java
+package com.lewjun.handler;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.web.socket.*;
+import org.springframework.web.socket.handler.AbstractWebSocketHandler;
+
+/**
+ * WebSocket处理类
+ */
+@Component
+public class MyWebSocketHandler extends AbstractWebSocketHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MyWebSocketHandler.class);
+
+    @Override
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        LOGGER.info("afterConnectionEstablished");
+        super.afterConnectionEstablished(session);
+    }
+
+    @Override
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        LOGGER.info("handleTextMessage");
+        super.handleTextMessage(session, message);
+        session.sendMessage(message);
+    }
+
+    @Override
+    protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws Exception {
+        LOGGER.info("handleBinaryMessage");
+        super.handleBinaryMessage(session, message);
+    }
+
+    @Override
+    protected void handlePongMessage(WebSocketSession session, PongMessage message) throws Exception {
+        LOGGER.info("handlePongMessage");
+        super.handlePongMessage(session, message);
+    }
+
+    @Override
+    public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
+        LOGGER.info("handleMessage");
+        super.handleMessage(session, message);
+    }
+
+    @Override
+    public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+        LOGGER.info("handleTransportError");
+        super.handleTransportError(session, exception);
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        LOGGER.info("afterConnectionClosed");
+        super.afterConnectionClosed(session, status);
+    }
+}
+```
+
+#### 建立握手拦截器
+
+```java
+package com.lewjun.interceptor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.stereotype.Component;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor;
+
+import java.util.Map;
+
+/**
+ * 握手接口拦截器
+ */
+@Component
+public class MyHttpSessionHandshakeInterceptor extends HttpSessionHandshakeInterceptor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MyHttpSessionHandshakeInterceptor.class);
+
+    @Override
+    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+        LOGGER.info("beforeHandshake attrs:{}", attributes);
+        return super.beforeHandshake(request, response, wsHandler, attributes);
+    }
+
+    @Override
+    public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception ex) {
+        LOGGER.info("afterHandshake");
+        super.afterHandshake(request, response, wsHandler, ex);
+    }
+}
+```
+
+#### xml形式配置websocket
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:websocket="http://www.springframework.org/schema/websocket"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.3.xsd
+	http://www.springframework.org/schema/websocket
+	http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd">
+
+    <!-- 自动扫描com.lewjun 使用注解的类 -->
+    <context:component-scan base-package="com.lewjun.handler, com.lewjun.interceptor"/>
+
+    <websocket:handlers allowed-origins="*">
+        <websocket:mapping handler="myWebSocketHandler" path="/websocket"/>
+        <websocket:handshake-interceptors>
+            <ref bean="myHttpSessionHandshakeInterceptor"/>
+        </websocket:handshake-interceptors>
+    </websocket:handlers>
+
+    <!-- 注册 sockJS,sockJS是spring对不能使用websocket协议的客户端提供一种模拟 -->
+    <websocket:handlers allowed-origins="*">
+        <websocket:mapping path="/sockjs/websocket" handler="myWebSocketHandler"/>
+        <websocket:handshake-interceptors>
+            <ref bean="myHttpSessionHandshakeInterceptor"/>
+        </websocket:handshake-interceptors>
+        <websocket:sockjs/>
+    </websocket:handlers>
+</beans>
+```
+
+#### html 调试
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>websocket demo</title>
+    <script type="text/javascript" src="assets/sockjs.min.js"></script>
+</head>
+<body>
+<div id="div"></div>
+
+<input type="text" id="txt"/>
+<input value="send" onclick="send()" type="button"/>
+<input value="close" onclick="closeWin()" type="button"/>
+</body>
+<script type="text/javascript">
+    var div = document.getElementById('div');
+    var socket = null;
+    var initSocket = function () {
+        if ('WebSocket' in window) {
+            socket = new WebSocket('ws://127.0.0.1:9090/websocket');
+        } else if ('MozWebSocket' in window) {
+            socket = new MozWebSocket('ws://127.0.0.1:9090/websocket');
+        } else {
+            socket = new SockJS("http://127.0.0.1:9090/sockjs/websocket");
+        }
+    };
+
+    initSocket();
+
+    socket.onopen = function (event) {
+        console.log(event);
+        socket.send('websocket client connect test');
+    };
+
+    socket.onclose = function (event) {
+        console.log(event);
+    };
+
+    socket.onerror = function (event) {
+        console.log(event);
+    };
+
+    socket.onmessage = function (event) {
+        console.log(event);
+        div.innerHTML += (' @_@ ' + event.data + ' ~_~ \n');
+    };
+
+    var send = function () {
+        var txt = document.getElementById("txt");
+        socket.send(txt.value);
+    };
+
+    var closeWin = function () {
+        socket.close();
+    };
+</script>
+
+</html>
+```
+
+### 依赖websocket-api
+
+#### 添加依赖
+
+```xml
+<dependency>
+    <groupId>javax.websocket</groupId>
+    <artifactId>javax.websocket-api</artifactId>
+    <version>1.1</version>
+    <scope>provided</scope>
+</dependency>
+```
+
+#### WebsocketController
+
+```java
+package com.lewjun.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import javax.websocket.*;
+import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
+import java.util.Date;
+
+// ws://localhost:9090/websocket1 依赖websocket-api
+@Component
+@ServerEndpoint("/websocket1")
+public class WsController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WsController.class);
+
+    @OnOpen
+    public void onOpen(Session session) {
+        LOGGER.info("onOpen {}", session.getId());
+    }
+
+    @OnClose
+    public void onClose(Session session) {
+        LOGGER.info("onClose {}", session.getId());
+    }
+
+    @OnError
+    public void onError(Session session, Throwable throwable) {
+        LOGGER.info("onError {}, {}", session.getId(), throwable.getMessage());
+    }
+
+    @OnMessage
+    public void onMessage(byte[] msg, Session session) throws IOException {
+        LOGGER.info("sessionId: {}", session.getId());
+        LOGGER.info("onMessage byte[]:{}", msg.length);
+        session.getBasicRemote().sendText("hello byte[] " + new Date());
+    }
+
+    @OnMessage
+    public void onMessage(String msg, Session session) throws IOException {
+        LOGGER.info("sessionId: {}", session.getId());
+        LOGGER.info("onMessage String:{}", msg);
+        session.getBasicRemote().sendText("hello " + msg + " " + new Date());
+    }
+}
+
+```
+

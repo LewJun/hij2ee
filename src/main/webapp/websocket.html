@@ -5,31 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>websocket demo</title>
+    <script type="text/javascript" src="assets/sockjs.min.js"></script>
 </head>
 <body>
 <div id="div"></div>
+
+<input type="text" id="txt"/>
+<input value="send" onclick="send()" type="button"/>
+<input value="close" onclick="closeWin()" type="button"/>
 </body>
 <script type="text/javascript">
     var div = document.getElementById('div');
-    var socket = new WebSocket('ws://127.0.0.1:9090/websocket');
+    var socket = null;
+    var initSocket = function () {
+        if ('WebSocket' in window) {
+            socket = new WebSocket('ws://127.0.0.1:9090/ws');
+        } else if ('MozWebSocket' in window) {
+            socket = new MozWebSocket('ws://127.0.0.1:9090/websocket');
+        } else {
+            socket = new SockJS("http://127.0.0.1:9090/sockjs/websocket");
+        }
+    };
 
-    socket.onopen = function(event){
+    initSocket();
+
+    socket.onopen = function (event) {
         console.log(event);
         socket.send('websocket client connect test');
     };
 
-    socket.onclose = function(event){
+    socket.onclose = function (event) {
         console.log(event);
     };
 
-    socket.onerror = function(event){
+    socket.onerror = function (event) {
         console.log(event);
     };
 
-    socket.onmessage = function(event){
+    socket.onmessage = function (event) {
         console.log(event);
-        div.innerHTML += (' @_@ ' + event.data + ' ~_~ ');
-    }
+        div.innerHTML += (' @_@ ' + event.data + ' ~_~ \n');
+    };
+
+    var send = function () {
+        var txt = document.getElementById("txt");
+        socket.send(txt.value);
+    };
+
+    var closeWin = function () {
+        socket.close();
+    };
 </script>
 
 </html>

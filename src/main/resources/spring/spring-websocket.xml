@@ -11,21 +11,21 @@
 	http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd">
 
     <!-- 自动扫描com.lewjun 使用注解的类 -->
-    <context:component-scan base-package="com.lewjun.handler, com.lewjun.interceptor"/>
+    <context:component-scan base-package="com.lewjun.controller, com.lewjun.handler, com.lewjun.interceptor"/>
 
-    <websocket:handlers>
-        <websocket:mapping handler="myWebSocketHandler" path="/websocket"/>
+    <websocket:handlers allowed-origins="*">
+        <websocket:mapping path="/websocket" handler="myWebSocketHandler"/>
         <websocket:handshake-interceptors>
             <ref bean="myHttpSessionHandshakeInterceptor"/>
         </websocket:handshake-interceptors>
     </websocket:handlers>
 
     <!-- 注册 sockJS,sockJs是spring对不能使用websocket协议的客户端提供一种模拟 -->
-    <websocket:handlers>
-        <websocket:mapping path="/sockjs/websocket" handler="myWebSocketHandler" />
+    <websocket:handlers allowed-origins="*">
+        <websocket:mapping path="/sockjs/websocket" handler="myWebSocketHandler"/>
         <websocket:handshake-interceptors>
-            <ref bean="myHttpSessionHandshakeInterceptor" />
+            <ref bean="myHttpSessionHandshakeInterceptor"/>
         </websocket:handshake-interceptors>
-        <websocket:sockjs />
+        <websocket:sockjs/>
     </websocket:handlers>
 </beans>
